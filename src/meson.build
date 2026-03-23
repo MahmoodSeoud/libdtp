@@ -19,9 +19,12 @@ server_src = [
 
 csp_dep = dependency('csp')
 param_dep = dependency('param')
-ossi_dep = dependency('ossi')
+ossi_dep = dependency('ossi', required: false)
 
-lib_deps = [csp_dep, param_dep, ossi_dep]
+lib_deps = [csp_dep, param_dep]
+if ossi_dep.found()
+  lib_deps += ossi_dep
+endif
 
 dtp_lib = library('dtp', lib_src, include_directories: [include, include_directories('.')], dependencies: lib_deps, install: true, implicit_include_directories: false)
 dtp_lib_dep = declare_dependency(include_directories : include, link_with : dtp_lib, dependencies: lib_deps)
