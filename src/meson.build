@@ -19,12 +19,17 @@ server_src = [
 
 csp_dep = dependency('csp')
 param_dep = dependency('param')
-ossi_dep = dependency('ossi', required: false)
 
-lib_deps = [csp_dep, param_dep]
-if ossi_dep.found()
-  lib_deps += ossi_dep
+# ossi is a FreeRTOS OS abstraction. On Linux it's header-only with no sources,
+# which causes meson's dependency() to fail. We resolve it manually by finding
+# the extern/ossi include directory and creating a header-only dependency.
+ossi_dep = dependency('ossi', required: false)
+if not ossi_dep.found()
+  ossi_inc = include_directories('../extern/ossi/include', is_system: true)
+  ossi_dep = declare_dependency(include_directories: ossi_inc)
 endif
+
+lib_deps = [csp_dep, param_dep, ossi_dep]
 
 dtp_lib = library('dtp', lib_src, include_directories: [include, include_directories('.')], dependencies: lib_deps, install: true, implicit_include_directories: false)
 dtp_lib_dep = declare_dependency(include_directories : include, link_with : dtp_lib, dependencies: lib_deps)
