@@ -1,3 +1,6 @@
 [submodule "extern/unity"]
 	path = extern/unity
 	url = https://github.com/ThrowTheSwitch/Unity.git
+[submodule "extern/ossi"]
+	path = extern/ossi
+	url = https://github.com/spaceinventor/libossi.git
